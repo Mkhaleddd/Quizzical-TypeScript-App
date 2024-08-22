@@ -1,10 +1,9 @@
-import MillionLint from '@million/lint';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
 // https://vitejs.dev/config/
-const _plugins = [react()];
-_plugins.unshift(MillionLint.vite())
+const _plugins = [react()]
 export default defineConfig({
-  plugins: _plugins
+  plugins: _plugins,
+  base:'/Quizzical-TypeScript-App/'
 });

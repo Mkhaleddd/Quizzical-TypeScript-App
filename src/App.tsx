@@ -27,6 +27,13 @@ const Home = lazy(() => import('./components/Home'));
 
 
 function App<T extends any[] |any[]>() {
+ 
+  useEffect(()=>{
+        [yellowBlob,blueBlob].forEach((picture) => {
+       const img=new Image()
+       img.src = picture
+   
+    })},[])
 
   const [options, setOptions] = useState<Options>(
 		{
@@ -91,17 +98,14 @@ function App<T extends any[] |any[]>() {
    return (
       <>
        <main className='container' > 
-         <img src={yellowBlob} alt='yellow blob' loading='lazy' className='top-img'/>
+         <img src={yellowBlob} alt='yellow blob'  className='top-img'/>
         {!started ?
         <Home 
           Start={Start}
           options={options} 
           handleChange={handleChange}
         />
-
-          :
-
-             <Suspense fallback={<Skeleton />}>
+          :   <Suspense fallback={<Skeleton />}>
                   <QuestionList 
                        started={started}
                        questions={questions}
@@ -109,15 +113,13 @@ function App<T extends any[] |any[]>() {
                       Start={Start}
                      
                        />
-            </Suspense>
-             
-          }
+            </Suspense>}
              <span>Developed by <a href='https://github.com/Mkhaleddd' target='_blank'>Mariam Khaled</a></span>
-             <img src={blueBlob} alt='yellow blob' loading='lazy' className='bottom-img'/>
+             <img src={blueBlob} alt='blue blob' className='bottom-img'/>
            </main>
-          
       </>
       ) 
     }
 export default App
+
 
