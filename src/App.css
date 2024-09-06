@@ -91,6 +91,7 @@ button:hover,button:focus{
   display: flex; 
   justify-content: center;
 }
+
 .container{
   margin: 0 auto;
   width: 100%;
@@ -163,18 +164,18 @@ margin-left: 1em;
   min-height: 25px;
   min-width: 65px;
 }
-#correct,#incorrect,#selected{
+.correct,.incorrect,.selected{
   border: none;
 }
-#selected{
+.selected{
   background-color: #d6dbf5;
 }
 
-#correct{
+.correct{
   background-color: #94d7a2;
  }
  
- #incorrect{
+ .incorrect{
  background-color: #f8bcbc;
  opacity: 0.6;
  }
@@ -188,7 +189,10 @@ margin-left: 1em;
   font-size: 1.2rem;
   font-weight: 700;
 }
-
+button[disabled]{
+  background-color:#7e8081;
+  color: #eee;
+}
 .skeleton {
   div  {
     display: flex;

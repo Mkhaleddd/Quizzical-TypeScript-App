@@ -1,4 +1,4 @@
-import { useState,useEffect ,ChangeEvent,lazy,Suspense}from 'react';
+import { useState,useEffect ,ChangeEvent,lazy,Suspense,useCallback}from 'react';
 import './App.css';
 import { nanoid } from 'nanoid';
 import yellowBlob from "./assets/shape-1.png"
@@ -23,7 +23,7 @@ export interface question {
   }
 
 const QuestionList = lazy(() => import('./components/QuestionList'));
-const Home = lazy(() => import('./components/Home'));
+const Home =lazy(() => import('./components/Home'));
 
 
 function App<T extends any[] |any[]>() {
@@ -88,12 +88,11 @@ function App<T extends any[] |any[]>() {
           ...prev,
           [name]: value
         }
-      });
-    }
-  function Start():void {
+      })};
+  const Start=useCallback(()=> {
     setStarted(prev=>!prev)
- 
-  }
+   
+  },[started])
 
    return (
       <>
@@ -110,7 +109,7 @@ function App<T extends any[] |any[]>() {
                        started={started}
                        questions={questions}
                        setQuestions={setQuestions}
-                      Start={Start}
+                       Start={Start}
                      
                        />
             </Suspense>}
