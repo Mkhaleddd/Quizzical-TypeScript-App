@@ -1,88 +1,51 @@
-import { FC } from "react"
-import {Options} from "../App"
+import { FC, SetStateAction } from "react"
+import {OptionsType} from "../App"
+import { handleChange } from "../utils"
+import { selectOptions} from "../constants"
 
  interface props{
-    options: Options
-    handleChange:React.ChangeEventHandler<HTMLSelectElement> | undefined
+    options: OptionsType
     Start:React.MouseEventHandler<HTMLButtonElement> | undefined
+	setOptions:React.Dispatch<SetStateAction<OptionsType>>
  }
-const Home :FC<props>=({options,handleChange,Start}): JSX.Element=> { 
+const Home :FC<props>=({options,Start,setOptions}): JSX.Element=> { 
   return (
     <section>
         <section  className="started" aria-label='Started'>
           <h1 className='title'>Quizzical</h1> 
           <h2>Answer the questions and test your knowledge!</h2>
           <div className="gameOptions-container">
-							<div className="select-container ">
-								<label className="custom-label" htmlFor="category">Category:</label>
-								<select
-									name="category"
-									id="category"
-									className="custom-select"
-									value={options.category}
-									onChange={handleChange}
-								>
-									<option value="">Any Category</option>
-									<option value="9">General Knowledge</option>
-									<option value="10">Entertainment: Books</option>
-									<option value="11">Entertainment: Film</option>
-									<option value="12">Entertainment: Music</option>
-									<option value="13">Entertainment: Musicals &amp; Theatres</option>
-									<option value="14">Entertainment: Television</option>
-									<option value="15">Entertainment: Video Games</option>
-									<option value="16">Entertainment: Board Games</option>
-									<option value="17">Science &amp; Nature</option>
-									<option value="18">Science: Computers</option>
-									<option value="19">Science: Mathematics</option>
-									<option value="20">Mythology</option>
-									<option value="21">Sports</option>
-									<option value="22">Geography</option>
-									<option value="23">History</option>
-									<option value="24">Politics</option>
-									<option value="25">Art</option>
-									<option value="26">Celebrities</option>
-									<option value="27">Animals</option>
-									<option value="28">Vehicles</option>
-									<option value="29">Entertainment: Comics</option>
-									<option value="30">Science: Gadgets</option>
-									<option value="31">Entertainment: Japanese Anime &amp; Manga</option>
-									<option value="32">Entertainment: Cartoon &amp; Animations</option>
-								</select>
-							</div>
 							
-							<div className="select-container ">
-								<label className="custom-label" htmlFor="difficulty">Difficulty:</label>
-
-								<select
-									name="difficulty"
-									id="difficulty"
-									className="custom-select"
-									value={options.difficulty}
-									onChange={handleChange}
+							{Object.entries(selectOptions).map(([key,value])=>(
+								<div className="select-container" key={key}>
+								<label 
+								htmlFor={key}
+								className="custom-label"
 								>
-									<option value="">Any Difficulty</option>
-									<option value="easy">Easy</option>
-									<option value="medium">Medium</option>
-									<option value="hard">Hard</option>
-								</select>
-							</div>
-							
-							<div className="select-container">
-								<label className="custom-label" htmlFor="type">Question Type:</label>
-
-								<select
-									name="type"
-									id="type"
+									 {key.charAt(0).toUpperCase() + key.slice(1)}:
+								</label>
+								<select 	
+								   name={key}
+									id={key}
 									className="custom-select"
-									value={options.type}
-									onChange={handleChange}
-								>
-									<option value="">Any Type</option>
-									<option value="multiple">Multiple Choice</option>
-									<option value="boolean">True / False</option>
+									value={options[key as keyof OptionsType]}
+									onChange={(e)=>handleChange(e,setOptions)}
+									>
+										{value.map(option=>(
+											<option 
+											value={option.value}
+											key={option.value}
+											>
+												{option.label}
+											</option>
+									))}
 								</select>
+								</div>
+								
+								
+							))}
+								
 							</div>
-						</div>
           <button className='btn-primary' onClick={Start}>Start</button>
         </section>
     </section>

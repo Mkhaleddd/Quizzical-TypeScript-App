@@ -1,18 +1,20 @@
-import { useState,useEffect ,ChangeEvent,lazy,Suspense,useCallback}from 'react';
+import { useState,useEffect ,lazy,Suspense,useCallback}from 'react';
+import { fetchApi } from './utils';
 import './App.css';
-import { nanoid } from 'nanoid';
+
 import yellowBlob from "./assets/shape-1.png"
 import blueBlob from "./assets/shape-2.png"
 import Skeleton from './components/Skeleton';
+import Loader from './components/Loader';
 
 
-export interface Options {
+export interface OptionsType {
     category:string
     type:string
     difficulty:string
   }
 
-export interface question {
+export interface QuestionType {
   [question: string]: any ;
    id: string; 
    question: string; 
@@ -26,7 +28,7 @@ const QuestionList = lazy(() => import('./components/QuestionList'));
 const Home =lazy(() => import('./components/Home'));
 
 
-function App<T extends any[] |any[]>() {
+function App() {
  
   useEffect(()=>{
         [yellowBlob,blueBlob].forEach((picture) => {
@@ -35,7 +37,7 @@ function App<T extends any[] |any[]>() {
    
     })},[])
 
-  const [options, setOptions] = useState<Options>(
+  const [options, setOptions] = useState<OptionsType>(
 		{
 			category: "",
 			difficulty: "",
@@ -44,75 +46,40 @@ function App<T extends any[] |any[]>() {
 	);
 
  const[started,setStarted]=useState<boolean>(false);
- const[questions,setQuestions]=useState<T[]>([]);
+ const[questions,setQuestions]=useState<QuestionType[]>([]);
  
- const shuffleArr=(arr: T[]):T[]=>{
-  arr.sort(()=>Math.random()-0.5)
- return arr
-};
-  const fetchApi=async()=>{
-  try {
-    const res= await fetch(`https://opentdb.com/api.php?amount=6
-      ${options.category&&`&category=${options.category}`}
-      ${options.type&&`&type=${options.type}`}
-      ${options.difficulty&&`&difficulty=${options.difficulty}`}
-      `);
-      if (res.ok) {
-    const data =await res.json();
-    let q :question | any =[]  
-    data.results.forEach((question :question)=>q.push({
-      id:nanoid() ,
-      question:question.question,
-      answers:shuffleArr([...question.incorrect_answers,question.correct_answer]), 
-      checked:false,
-      selected:null,
-      correct:question.correct_answer,
-    }
-    ))
-    setQuestions(q)
-  }
-  } catch {
-    throw new Error("couldnt fetch the trivia api")
-  }
- 
-}
+
+
   useEffect( ()=>{
-      fetchApi() 
-    },[started])
+    if (started || options) {
+      fetchApi({ options, setQuestions });
+  }
+    },[started,options])
     
 
-  const handleChange =( event :ChangeEvent<HTMLSelectElement>):void=> {
-      const { name , value } = event.currentTarget;
-      setOptions(prev => {
-        return {
-          ...prev,
-          [name]: value
-        }
-      })};
-  const Start=useCallback(()=> {
-    setStarted(prev=>!prev)
-   
-  },[started])
+ 
+  const start=useCallback(()=> {setStarted(prev=>!prev)},[])
 
    return (
       <>
        <main className='container' > 
          <img src={yellowBlob} alt='yellow blob'  className='top-img'/>
         {!started ?
-        <Home 
-          Start={Start}
-          options={options} 
-          handleChange={handleChange}
-        />
-          :   <Suspense fallback={<Skeleton />}>
-                  <QuestionList 
-                       started={started}
+        <Suspense fallback={<Loader />}>
+                    <Home 
+                    Start={start}
+                    options={options} 
+                    setOptions={setOptions}
+                  />
+        </Suspense>
+          :
+        <Suspense fallback={<Skeleton />}>
+                  <QuestionList
                        questions={questions}
                        setQuestions={setQuestions}
-                       Start={Start}
-                     
+                       start={start}
                        />
-            </Suspense>}
+        </Suspense>}
              <span>Developed by <a href='https://github.com/Mkhaleddd' target='_blank'>Mariam Khaled</a></span>
              <img src={blueBlob} alt='blue blob' className='bottom-img'/>
            </main>

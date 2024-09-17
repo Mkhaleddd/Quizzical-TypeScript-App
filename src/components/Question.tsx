@@ -1,22 +1,21 @@
-import { nanoid } from "nanoid";
-import { question } from '../App';
+import { QuestionType } from '../App';
 import  { FC, MouseEvent} from "react";
 import { decode } from "html-entities";
+import { handleClick } from "../utils";
 
-interface props{
-    started:boolean 
+interface Questionprops{
     key:string
     id:string
-    question:question
-    handleClick:any
+    question:QuestionType
+    setQuestions:React.Dispatch<React.SetStateAction<QuestionType[]>>
 }
 
-const Question :FC<props> =(props) :JSX.Element=>{
+const Question :FC<Questionprops> =({question,id,setQuestions}) :JSX.Element=>{
     
    function handleAnswer(answer:string,event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) {
      event.stopPropagation()
-        if (props.question.checked) return; //answers are checked
-         props.handleClick(answer,props.id);
+        if (question.checked) return; //answers are checked
+         handleClick(answer,id,setQuestions);
     }
 
 function replace(answers :string)  
@@ -26,17 +25,17 @@ function replace(answers :string)
 } 
 
 
- let answers : JSX.Element[] |string =props.question.answers.map((answer :string)=>{
+ let answers : JSX.Element[] |string =question.answers.map((answer :string)=>{
        let id=''
-       if (props.question.selected===answer) id='selected'
-       if (props.question.checked) 
-        {    if (props.question.correct===answer)  id='correct';
-            else if (props.question.selected===answer)  id='incorrect';
+       if (question.selected===answer) id='selected'
+       if (question.checked) 
+        {    if (question.correct===answer)  id='correct';
+            else if (question.selected===answer)  id='incorrect';
         }
         
     return(<>
        <button 
-       key={nanoid()}  
+       key={id}  
        id={id} 
        className={`btn-answer ${id} `}
        onClick={(e)=>handleAnswer(answer,e)}
@@ -50,7 +49,7 @@ function replace(answers :string)
     return(     
     <div className="container" id="questions">
         <article>
-           <h3>{replace(props.question.question)}</h3>
+           <h3>{replace(question.question)}</h3>
                        {answers}
         </article>
         

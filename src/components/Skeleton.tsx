@@ -3,34 +3,18 @@
 const Skeleton = () => {
   return (
     <>
+
      <section  aria-label='skeletion UI'>
-        <div className="container skeleton">
+      {Array.from({length:3}).map((_,i)=>(
+        <div className="container skeleton" key={i}>
           <h3></h3>
           <div>
-            <p></p>
-            <p></p>
-            <p></p>
-            <p></p>
+            {Array.from({length:4}).map((_,i)=>(
+              <p key={i}></p>
+            ))}
           </div>  
-        </div>
-        <div className=" container skeleton">
-           <h3></h3>
-           <div>
-            <p></p>
-            <p></p>
-            <p></p>
-            <p></p>
-           </div>
-        </div>
-        <div className=" container skeleton">
-           <h3></h3>
-           <div>
-            <p></p>
-            <p></p>
-            <p></p>
-            <p></p>
-           </div>
-        </div>
+       </div>
+      ))}
      </section>
     </>
   )
